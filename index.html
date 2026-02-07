@@ -8,8 +8,8 @@
 <style>
 body{
   margin:0;
-  font-family: 'Comic Sans MS', Arial, sans-serif;
-  background: linear-gradient(135deg,#ffd6e8,#ffe9c6);
+  font-family:'Comic Sans MS',Arial,sans-serif;
+  background:linear-gradient(135deg,#ffd6e8,#ffe9c6);
   min-height:100vh;
   display:flex;
   justify-content:center;
@@ -25,19 +25,16 @@ body{
   box-shadow:0 15px 40px rgba(0,0,0,.2);
 }
 .hidden{display:none}
-
 .envelope{
   font-size:80px;
   cursor:pointer;
-  animation:pulse 1.5s infinite;
+  animation:pulse 1.4s infinite;
 }
 @keyframes pulse{
   0%{transform:scale(1)}
-  50%{transform:scale(1.1)}
+  50%{transform:scale(1.12)}
   100%{transform:scale(1)}
 }
-
-h1{margin:10px 0}
 input,select,button{
   width:100%;
   padding:12px;
@@ -48,23 +45,25 @@ input,select,button{
 }
 button{
   background:#ff5a7a;
-  color:white;
+  color:#fff;
   border:none;
   cursor:pointer;
 }
 button:hover{opacity:.9}
-
-.message-box{
-  margin-top:15px;
+.msg{
   font-size:18px;
   min-height:90px;
+  margin-top:10px;
 }
-
+.category{
+  font-weight:bold;
+  color:#ff5a7a;
+  margin-top:5px;
+}
 .home{
-  margin-top:15px;
   background:#444;
+  margin-top:15px;
 }
-
 .heart{
   position:fixed;
   bottom:-20px;
@@ -82,10 +81,8 @@ button:hover{opacity:.9}
 <div class="container">
 
 <!-- CREATE -->
-<div id="createBox">
-  <h1>💌 Secret Valentine</h1>
-  <p>Create a secret message ✨</p>
-
+<div id="create">
+  <h2>💌 Secret Valentine</h2>
   <input id="from" placeholder="Your name">
   <input id="to" placeholder="Receiver name">
 
@@ -101,17 +98,17 @@ button:hover{opacity:.9}
   <button onclick="generate()">Generate Link</button>
 
   <div id="linkBox" class="hidden">
-    <p>Share this link 👇</p>
     <div id="link" style="word-break:break-all;background:#f4f4f4;padding:10px;border-radius:10px"></div>
     <button onclick="share()">Share on WhatsApp</button>
   </div>
 </div>
 
 <!-- VIEW -->
-<div id="viewBox" class="hidden">
-  <div id="envelope" class="envelope" onclick="openMsg()">💌</div>
-  <h2 id="title"></h2>
-  <div id="msg" class="message-box"></div>
+<div id="view" class="hidden">
+  <div class="envelope" onclick="openMsg()">💌</div>
+  <h3 id="hello"></h3>
+  <div class="category" id="catText"></div>
+  <div class="msg" id="msg"></div>
   <button class="home" onclick="goHome()">🏠 Home</button>
 </div>
 
@@ -120,164 +117,90 @@ button:hover{opacity:.9}
 <audio id="music"></audio>
 
 <script>
-/* ================== MESSAGES ================== */
-const messages = {
+/* ===== MESSAGES (20 EACH) ===== */
+const messages={
 friend:[
-"You are not just a friend, you are my comfort zone 💙",
-"Some friendships don’t need daily talks, still strong 🤝",
-"You make boring days better 😄",
-"Thanks for being real, always 🙌",
-"Friendship like ours is rare 💎",
-"You stood with me when I needed most 🫂",
-"No filters, just pure friendship 😎",
-"Life is easier with you around 🙂",
-"Your presence itself is happiness 🌈",
-"Forever grateful for you 🤍",
-"Friends like you are family 🏡",
-"Memories with you are priceless 📸",
-"Trust like ours is gold 🪙",
-"You know my silence too 🤫",
-"Always got my back 💪",
-"You make me laugh effortlessly 😂",
-"Friendship > Everything 🔥",
-"Thanks for choosing me as friend 💫",
-"We grew together 🌱",
-"One message can’t explain our bond 🧩"
+"You are my comfort zone 🤍","Friends like you are rare 💎","Always got my back 💪",
+"Life is lighter with you 😄","Friendship > everything 🔥","You understand my silence 🤫",
+"Real ones stay 🤝","Forever thankful for you 🌱","Memories priceless 📸","You matter a lot 💙",
+"Best chaos partner 😂","No filters needed 😎","You keep me sane 😌","Always support 🙌",
+"Pure friendship 💫","Grew together 🌿","Trust never breaks 🔐","Always welcome 🏡",
+"One bond, many memories 🧩","Friendship forever ♾️"
 ],
-
 lover:[
-"You are my favorite notification ❤️",
-"My heart feels safe with you 💖",
-"Every day feels special because of you ✨",
-"Love feels calm with you 🌸",
-"You are my today and tomorrow 💍",
-"I smile without reason when I think of you 😊",
-"You are my best decision 💫",
-"My heart chose you 💓",
-"Forever sounds perfect with you 🥰",
-"You make love feel easy 💕",
-"You are my home 🏠",
-"My world begins with you 🌍",
-"Your voice is my peace 🎵",
-"I trust you with my heart 🤍",
-"Love grew stronger because of you 🌹",
-"You are my constant ❤️",
-"I want all my days with you ⏳",
-"You complete me 💑",
-"My heart beats your name 💓",
-"I love you, more every day 💘"
+"My heart chose you ❤️","You feel like home 🏠","Love feels calm with you 🌸",
+"My favourite person 💕","Forever starts here 💍","My safe place 🤍",
+"Love grows daily 🌹","You complete me 💑","My world 🌍","Heartbeat sync 💓",
+"You are my peace 🎵","Always us 💖","I trust you fully 🔐",
+"My best decision ✨","Love in every moment 💫","You matter most 💘",
+"My today & tomorrow ⏳","My happiness 😊","All my love ❤️","Always you ♾️"
 ],
-
 crush:[
-"I don’t know why, but you make me smile 😳",
-"Seeing you makes my day better 🌸",
-"My heart skips a beat sometimes 💓",
-"I like you… secretly 🤫",
-"You’re special, even if you don’t know 💌",
-"My eyes search for you 👀",
-"You stay in my thoughts 💭",
-"I hope you feel this someday 💫",
-"You make ordinary moments magical ✨",
-"I admire you silently 🌙",
-"My heart chose you quietly 🤍",
-"I get nervous around you 😅",
-"Something about you feels right 💕",
-"I like you more than I admit 🙈",
-"You make me believe in feelings 💖",
-"I wish you knew 💭",
-"You’re my favorite distraction 😄",
-"My smile starts with you 😊",
-"Hope brings courage 🌱",
-"Maybe someday 💌"
+"I like you secretly 🤫","My heart notices you 💓","You make me smile 😳",
+"Something about you ✨","Silent admiration 🌙","My thoughts find you 💭",
+"You feel special 💌","Hope someday 🌱","You’re my distraction 😄",
+"Nervous around you 😅","Quiet feelings 🤍","You stand out 🌟",
+"Unspoken thoughts 💭","My smile begins with you 😊","Wish you knew 🙈",
+"Soft spot 💕","Heart whispers your name 💓","Tiny hopes 🌸",
+"One-sided magic ✨","Maybe someday 💫"
 ],
-
 family:[
-"Family is where life begins ❤️",
-"You are my forever support 🏡",
-"Love feels safe at home 🤍",
-"Thank you for always being there 🙏",
-"Family means unconditional love 💕",
-"You shaped who I am today 🌱",
-"My strength comes from you 💪",
-"Home is you 🏠",
-"I’m lucky to have you 💫",
-"Family first, always 👨‍👩‍👦",
-"Your care means everything 🤍",
-"Roots keep us strong 🌳",
-"You stood by me silently 🤝",
-"Family love never fades 💖",
-"Grateful beyond words 🙏",
-"You taught me love ❤️",
-"Always my safe place 🌸",
-"Together forever 🧡",
-"My world starts here 🌍",
-"Blessed to be yours 🙌"
+"Family first ❤️","My strength 🏡","Unconditional love 🤍",
+"Forever support 🙏","Home feels warm 🌸","Roots strong 🌳",
+"Always together 🫂","Grateful always 💖","My safe world 🌍",
+"Love without limits 💫","You shaped me 🌱","Forever bond 🔗",
+"Peace lives here 😌","Blessed family 🙌","Support system 💪",
+"Heart of home 🏠","Together always ♾️","Pure love 💕",
+"My foundation 🧱","Family forever ❤️"
 ],
-
 ex:[
-"Some stories end, lessons stay 🌧️",
-"Grateful for what we were 🌙",
-"Memories still exist 📖",
-"I wish you well 🤍",
-"Not hate, just acceptance 🌱",
-"We changed, that’s okay 🌫️",
-"Some chapters close quietly 📘",
-"I’ve grown since then 🌿",
-"No regrets, only learning 💭",
-"I found myself again ✨",
-"Time healed things ⏳",
-"Thank you for the past 🤍",
-"Letting go brought peace 🌊",
-"I respect what we had 🙏",
-"Distance taught clarity 🌙",
-"Moving forward 🛤️",
-"Not broken, just wiser 🧠",
-"Silence is sometimes closure 🌧️",
-"I wish happiness for you 🌈",
-"Endings make space for new beginnings 🌅"
+"Lessons learned 🌱","Grateful memories 📖","No hatred 🤍",
+"Time healed ⏳","Acceptance 🌧️","Peace now 🌊",
+"Respect remains 🙏","Growth happened 🌿","Silence closure 🤫",
+"Moving on 🛤️","Thankful for past 💭","Changed paths 🌙",
+"No regrets ✨","Wiser now 🧠","Distance clarity 🌫️",
+"Life continues 🌅","Closed chapter 📘","Calm heart 🤍",
+"Good wishes 🌈","New beginnings 🌱"
 ]
 };
 
-/* ================== CREATE LINK ================== */
+/* ===== GENERATE LINK ===== */
 function generate(){
   const f=from.value.trim(), t=to.value.trim(), c=cat.value;
   if(!f||!t||!c){alert("Fill everything macha 😅");return;}
-  const msg = messages[c][Math.floor(Math.random()*20)];
-  const url = location.origin+location.pathname+
-    `?from=${encodeURIComponent(f)}&to=${encodeURIComponent(t)}&cat=${c}&msg=${encodeURIComponent(msg)}`;
+  const id=Math.floor(Math.random()*20);
+  const url=location.origin+location.pathname+
+    `?from=${encodeURIComponent(f)}&to=${encodeURIComponent(t)}&cat=${c}&id=${id}`;
   link.innerText=url;
   linkBox.classList.remove("hidden");
 }
-
 function share(){
   window.open("https://wa.me/?text="+encodeURIComponent(link.innerText));
 }
 
-/* ================== VIEW MODE ================== */
+/* ===== VIEW MODE ===== */
 const p=new URLSearchParams(location.search);
-if(p.get("msg")){
-  createBox.classList.add("hidden");
-  viewBox.classList.remove("hidden");
-  title.innerText=`Hey ${p.get("to")} 👋`;
+if(p.get("id")){
+  create.classList.add("hidden");
+  view.classList.remove("hidden");
+  hello.innerText=`Hey ${p.get("to")} 👋`;
+  catText.innerText=`From your ${p.get("cat").toUpperCase()}`;
 }
 
 function openMsg(){
-  envelope.classList.add("hidden");
-  playMusic(p.get("cat"));
-  typeText(p.get("msg"));
+  const c=p.get("cat"), id=p.get("id");
+  typeText(messages[c][id]);
   hearts();
+  playMusic(c);
 }
-
 function typeText(text){
   msg.innerText="";
   let i=0;
-  const timer=setInterval(()=>{
-    msg.innerText+=text[i];
-    i++;
-    if(i>=text.length)clearInterval(timer);
-  },50);
+  const t=setInterval(()=>{
+    msg.innerText+=text[i++];
+    if(i>=text.length)clearInterval(t);
+  },45);
 }
-
 function hearts(){
   setInterval(()=>{
     const h=document.createElement("div");
@@ -288,17 +211,13 @@ function hearts(){
     setTimeout(()=>h.remove(),4000);
   },500);
 }
-
-function playMusic(cat){
+function playMusic(c){
   const m=document.getElementById("music");
-  m.src=cat+".mp3";
+  m.src=c+".mp3";
   m.loop=true;
   m.play().catch(()=>{});
 }
-
-function goHome(){
-  location.href=location.pathname;
-}
+function goHome(){location.href=location.pathname;}
 </script>
 </body>
 </html>
