@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -52,6 +53,10 @@ button:hover{opacity:.9}
   margin-top:15px;
   background:#444;
 }
+.category-tag{
+  font-weight:bold;
+  margin-bottom:10px;
+}
 </style>
 </head>
 
@@ -86,6 +91,7 @@ button:hover{opacity:.9}
 <!-- RECEIVER -->
 <div id="receiverBox" class="hidden">
   <h2 id="msgTitle"></h2>
+  <div class="category-tag" id="msgCategory"></div>
   <p id="msgText"></p>
   <button class="home-btn" onclick="goHome()">🏠 Home</button>
 </div>
@@ -132,6 +138,7 @@ const messages = {
   ]
 };
 
+// GENERATE LINK
 function generate(){
   const from = document.getElementById("from").value.trim();
   const to = document.getElementById("to").value.trim();
@@ -145,35 +152,49 @@ function generate(){
   const list = messages[cat];
   const msg = list[Math.floor(Math.random()*list.length)];
 
-  const url =
-    location.origin +
-    location.pathname +
-    `?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&msg=${encodeURIComponent(msg)}`;
+  const payload = {
+    from,
+    to,
+    category: cat,
+    message: msg
+  };
+
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const url = location.origin + location.pathname + "?data=" + encoded;
 
   document.getElementById("link").innerText = url;
   document.getElementById("linkArea").classList.remove("hidden");
 }
 
+// SHARE
 function share(){
   const text = document.getElementById("link").innerText;
-  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+  window.open("https://wa.me/?text=" + encodeURIComponent(text));
 }
 
+// HOME
 function goHome(){
   window.location.href = location.pathname;
 }
 
-// RECEIVER LOGIC
+// RECEIVER MODE
 const params = new URLSearchParams(window.location.search);
-if(params.get("msg")){
+if(params.get("data")){
+  const decoded = JSON.parse(
+    decodeURIComponent(escape(atob(params.get("data"))))
+  );
+
   document.getElementById("senderBox").classList.add("hidden");
   document.getElementById("receiverBox").classList.remove("hidden");
 
   document.getElementById("msgTitle").innerText =
-    `Hey ${params.get("to")} 👋`;
+    "Hey " + decoded.to + " 👋";
+
+  document.getElementById("msgCategory").innerText =
+    "Category: " + decoded.category.toUpperCase();
 
   document.getElementById("msgText").innerText =
-    params.get("msg");
+    decoded.message;
 }
 </script>
 
