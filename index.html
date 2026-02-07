@@ -1,20 +1,18 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Secret Message Fun 🎁</title>
+<title>Secret Valentine Message 💌</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#ffecd2,#fcb69f);
+  background: linear-gradient(135deg,#ffdde1,#ee9ca7);
   margin:0;
-  padding:0;
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  min-height:100vh;
 }
 .container{
   background:#fff;
@@ -22,10 +20,10 @@ body{
   max-width:420px;
   border-radius:16px;
   padding:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
   text-align:center;
 }
-h1{margin-bottom:10px}
+h1{margin-bottom:8px}
 input,select,button{
   width:100%;
   padding:12px;
@@ -35,27 +33,27 @@ input,select,button{
   font-size:16px;
 }
 button{
-  background:#ff6f61;
+  background:#ff4d6d;
   color:#fff;
   border:none;
   cursor:pointer;
 }
 button:hover{opacity:.9}
+.hidden{display:none}
 .link-box{
-  word-break:break-all;
-  background:#f5f5f5;
+  background:#f3f3f3;
   padding:10px;
   border-radius:8px;
-  margin-top:10px;
+  word-break:break-all;
 }
-.hidden{display:none}
-.home-btn{
-  margin-top:15px;
-  background:#444;
-}
-.category-tag{
+.tag{
   font-weight:bold;
-  margin-bottom:10px;
+  color:#ff4d6d;
+  margin-bottom:8px;
+}
+.home{
+  background:#444;
+  margin-top:15px;
 }
 </style>
 </head>
@@ -63,138 +61,192 @@ button:hover{opacity:.9}
 <body>
 <div class="container">
 
-<h1>🎁 Secret Message Fun</h1>
+<h1>💌 Secret Valentine Message</h1>
+<p>Send a secret message to someone special</p>
 
 <!-- SENDER -->
 <div id="senderBox">
-  <p>Create a fun secret message and share it 😄</p>
-
   <input id="from" placeholder="Your name">
-  <input id="to" placeholder="Receiver name">
+  <input id="to" placeholder="Their name">
 
   <select id="category">
-    <option value="">Select message type</option>
-    <option value="funny">Funny</option>
-    <option value="friendly">Friendly</option>
-    <option value="motivational">Motivational</option>
+    <option value="">Select relation</option>
+    <option value="friend">Friend</option>
+    <option value="lover">Lover</option>
+    <option value="crush">Crush</option>
+    <option value="family">Family</option>
+    <option value="ex">Ex</option>
   </select>
 
   <button onclick="generate()">Generate Secret Link</button>
 
   <div id="linkArea" class="hidden">
     <p>Share this link 👇</p>
-    <div class="link-box" id="link"></div>
+    <div id="link" class="link-box"></div>
     <button onclick="share()">Share on WhatsApp</button>
   </div>
 </div>
 
 <!-- RECEIVER -->
 <div id="receiverBox" class="hidden">
-  <h2 id="msgTitle"></h2>
-  <div class="category-tag" id="msgCategory"></div>
-  <p id="msgText"></p>
-  <button class="home-btn" onclick="goHome()">🏠 Home</button>
+  <h2 id="title"></h2>
+  <div class="tag" id="relation"></div>
+  <p id="message"></p>
+  <button class="home" onclick="goHome()">🏠 Home</button>
 </div>
 
 </div>
 
 <script>
 const messages = {
-  funny: [
-    "You just unlocked a smile 😄",
-    "This message travelled secretly to you 🕵️‍♂️",
-    "Warning: Happiness detected ⚠️",
-    "You owe me one smile now 😜",
-    "Surprise unlocked 🎉",
-    "Keep smiling, it suits you 😁",
-    "This message chose YOU 🎯",
-    "Tiny message, big smile 😆",
-    "Inbox happiness delivered 📩",
-    "Smile check completed ✅"
+  friend: [
+    "Life feels lighter with you around 🤝",
+    "A real friend is a rare gift 🎁",
+    "Thanks for standing by me always 💙",
+    "Laughs shared with you are the best 😄",
+    "You’re proof that friendship still matters ✨",
+    "No matter what, I’ve got you 🫂",
+    "Friends like you are forever 💫",
+    "You turn bad days into good ones 🌈",
+    "Lucky to call you my friend 🙌",
+    "Friendship without filters is the best 😎",
+    "You know me better than most 🧠",
+    "Some bonds don’t need daily talks 🤍",
+    "Real ones stay, and you did 💪",
+    "Thanks for all the memories 📸",
+    "You’re more family than friend 🏠",
+    "Every joke hits better with you 😂",
+    "You make silence comfortable 😊",
+    "One message can’t explain this bond 🧩",
+    "Friendship goals: us ✨",
+    "Forever grateful for you 🙏"
   ],
-  friendly: [
-    "You matter more than you know 🤝",
-    "Someone remembered you today 😊",
-    "This message brings good vibes ✨",
-    "Hope your day is awesome 🌈",
-    "You’re appreciated 👍",
-    "Just a reminder: you’re cool 😎",
-    "Positive thoughts coming your way 💫",
-    "A small hello from far away 👋",
-    "Friendship never needs a reason 🤗",
-    "Stay happy always 🙂"
+  lover: [
+    "You make my heart feel calm ❤️",
+    "Being with you feels right 🫶",
+    "Every day feels softer because of you 🌸",
+    "You’re my favorite part of today 💕",
+    "Love feels simple with you 😊",
+    "My world feels warmer with you 🌍",
+    "You are my constant 💖",
+    "With you, even silence feels good 🥰",
+    "You make ordinary moments special ✨",
+    "I choose you, every time 💞",
+    "Your presence is my comfort 🤍",
+    "Love doesn’t need words with you 🫂",
+    "You feel like home 🏡",
+    "Smiles come easier because of you 😌",
+    "You matter more than you know 💘",
+    "I’m thankful for us 🌹",
+    "You make love feel peaceful 🌙",
+    "My heart recognizes you 💓",
+    "You’re my favorite notification 📱",
+    "This message carries my feelings 💌"
   ],
-  motivational: [
-    "You are stronger than you think 💪",
-    "Small steps lead to big wins 🚀",
-    "Believe in yourself 🌟",
-    "Your time will come ⏳",
-    "Progress over perfection 🔥",
-    "Keep going, don’t stop 🛤️",
-    "You’re capable of amazing things ✨",
-    "Today is a fresh start 🌅",
-    "Focus. Move. Win. 🎯",
-    "Success likes patience 🧠"
+  crush: [
+    "Some feelings stay hidden, like this one 😳",
+    "You cross my mind more than you know 💭",
+    "This message is braver than me 🫣",
+    "I smile without reason sometimes 😊",
+    "You unknowingly make my day better ✨",
+    "Maybe someday you’ll know this 🤍",
+    "My heart reacts before my mind 😅",
+    "This is a quiet feeling 💫",
+    "If only you knew 🫶",
+    "A small message, big feelings 💌",
+    "You feel different, in a good way 🌸",
+    "This secret feels warm 😌",
+    "I notice you, even silently 👀",
+    "Some crushes feel special 🌷",
+    "This message carries a smile 😊",
+    "I hope this makes you smile 😄",
+    "Not a confession, just honesty 🤍",
+    "You brighten moments without trying ✨",
+    "This feeling is gentle 🕊️",
+    "One day, maybe 💭"
+  ],
+  family: [
+    "Family is my forever 🏠",
+    "Lucky to have you in my life ❤️",
+    "No matter what, family stays 💪",
+    "Your presence means everything 🤍",
+    "Home feels complete because of you 🫂",
+    "Grateful for you every day 🙏",
+    "Family love is unmatched 💝",
+    "You are my strength 💪",
+    "Together is my favorite place 🏡",
+    "Family over everything 👨‍👩‍👧",
+    "You make life meaningful 🌸",
+    "Blood or not, love matters 💕",
+    "Always proud of you 😊",
+    "Family bonds are unbreakable 🔗",
+    "Thank you for being there 🤝",
+    "You are deeply valued 💖",
+    "Home starts with you 🏠",
+    "Love begins here ❤️",
+    "Family is peace 🌿",
+    "Forever thankful for you 🌟"
+  ],
+  ex: [
+    "Some memories stay, even if paths change 🌙",
+    "No bitterness, just growth 🕊️",
+    "Wishing you peace ahead ✨",
+    "We learned, and that matters 🤍",
+    "Not everything ends badly 🌫️",
+    "Grateful for what was 🙏",
+    "Letting go is also strength 💪",
+    "Some chapters end quietly 📖",
+    "No hate, only lessons 🌱",
+    "Hope life treats you well 🌸",
+    "We grew in different ways 🌍",
+    "Time gives clarity ⏳",
+    "This message carries calm 🧠",
+    "Memories without regret 🤍",
+    "Closure feels peaceful 🌙",
+    "Respect remains 🤝",
+    "Growth matters more than pain 🌿",
+    "Past stays in the past 🕊️",
+    "Wishing happiness from afar ✨",
+    "Life moves forward 🚶‍♂️"
   ]
 };
 
-// GENERATE LINK
 function generate(){
-  const from = document.getElementById("from").value.trim();
-  const to = document.getElementById("to").value.trim();
-  const cat = document.getElementById("category").value;
+  const f = from.value.trim();
+  const t = to.value.trim();
+  const c = category.value;
 
-  if(!from || !to || !cat){
+  if(!f || !t || !c){
     alert("Fill all fields");
     return;
   }
 
-  const list = messages[cat];
-  const msg = list[Math.floor(Math.random()*list.length)];
+  const msg = messages[c][Math.floor(Math.random()*messages[c].length)];
+  const data = btoa(encodeURIComponent(JSON.stringify({from:f,to:t,cat:c,msg})));
+  const url = location.origin + location.pathname + "?data=" + data;
 
-  const payload = {
-    from,
-    to,
-    category: cat,
-    message: msg
-  };
-
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  const url = location.origin + location.pathname + "?data=" + encoded;
-
-  document.getElementById("link").innerText = url;
-  document.getElementById("linkArea").classList.remove("hidden");
+  link.innerText = url;
+  linkArea.classList.remove("hidden");
 }
 
-// SHARE
 function share(){
-  const text = document.getElementById("link").innerText;
-  window.open("https://wa.me/?text=" + encodeURIComponent(text));
+  window.open("https://wa.me/?text="+encodeURIComponent(link.innerText));
 }
 
-// HOME
 function goHome(){
   window.location.href = location.pathname;
 }
 
-// RECEIVER MODE
-const params = new URLSearchParams(window.location.search);
+// Receiver mode
+const params = new URLSearchParams(location.search);
 if(params.get("data")){
-  const decoded = JSON.parse(
-    decodeURIComponent(escape(atob(params.get("data"))))
-  );
+  const d = JSON.parse(decodeURIComponent(atob(params.get("data"))));
+  senderBox.classList.add("hidden");
+  receiverBox.classList.remove("hidden");
 
-  document.getElementById("senderBox").classList.add("hidden");
-  document.getElementById("receiverBox").classList.remove("hidden");
-
-  document.getElementById("msgTitle").innerText =
-    "Hey " + decoded.to + " 👋";
-
-  document.getElementById("msgCategory").innerText =
-    "Category: " + decoded.category.toUpperCase();
-
-  document.getElementById("msgText").innerText =
-    decoded.message;
+  title.innerText = "Hey " + d.to + " 👋";
+  relation.innerText = "From your " + d.cat.toUpperCase();
+  message.innerText = d.msg;
 }
 </script>
 
