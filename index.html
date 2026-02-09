@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +10,7 @@
 body{
   margin:0;
   min-height:100vh;
-  font-family: "Comic Sans MS", cursive;
+  font-family:"Comic Sans MS",cursive;
   background:linear-gradient(135deg,#ffd1dc,#ffe6f0);
   display:flex;
   align-items:center;
@@ -24,7 +25,6 @@ body{
   box-shadow:0 15px 40px rgba(0,0,0,.2);
   text-align:center;
 }
-h1{margin:10px 0}
 input,select,button{
   width:100%;
   padding:12px;
@@ -40,8 +40,15 @@ button{
   cursor:pointer;
 }
 button:hover{opacity:.9}
-
 .hidden{display:none}
+
+.link-box{
+  background:#f4f4f4;
+  padding:10px;
+  border-radius:10px;
+  word-break:break-all;
+  margin-top:10px;
+}
 
 /* ENVELOPE */
 .envelope{
@@ -62,19 +69,8 @@ button:hover{opacity:.9}
   animation:fadeUp .6s ease;
 }
 @keyframes fadeUp{
-  from{opacity:0; transform:translateY(20px)}
-  to{opacity:1; transform:translateY(0)}
-}
-
-/* HEARTS */
-.heart{
-  position:fixed;
-  bottom:-20px;
-  font-size:20px;
-  animation:float 4s linear infinite;
-}
-@keyframes float{
-  to{transform:translateY(-110vh); opacity:0}
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
 .home{
@@ -91,6 +87,7 @@ button:hover{opacity:.9}
 <!-- CREATE -->
 <div id="create">
   <h1>💌 Secret Valentine</h1>
+
   <input id="from" placeholder="Your name">
   <input id="to" placeholder="Receiver name">
 
@@ -105,18 +102,23 @@ button:hover{opacity:.9}
 
   <button onclick="generate()">Generate Link</button>
 
-  <p id="link" style="word-break:break-all"></p>
+  <!-- SHARE AREA -->
+  <div id="shareBox" class="hidden">
+    <p>🔗 Share this link</p>
+    <div id="linkBox" class="link-box"></div>
+
+    <button onclick="copyLink()">📋 Copy Link</button>
+    <button onclick="shareWhatsApp()">🟢 Share on WhatsApp</button>
+  </div>
 </div>
 
 <!-- VIEW -->
 <div id="view" class="hidden">
   <h2 id="hello"></h2>
 
-  <!-- ENVELOPE -->
   <div id="env" class="envelope" onclick="openMsg()">💌</div>
   <p>Tap the envelope</p>
 
-  <!-- MESSAGE -->
   <div id="msgBox" class="hidden">
     <p id="fromText"></p>
     <p class="msg" id="msg"></p>
@@ -129,145 +131,42 @@ button:hover{opacity:.9}
 
 <script>
 const messages={
-friend:[
-"Friendship isn’t about time, it’s about connection ❤️",
-"You make ordinary days feel special 🌈",
-"No matter what, I’ve got your back 🤝",
-"Life is better with you as my friend 😄",
-"Thanks for being you 💙",
-"Some bonds don’t need words 🧩",
-"Real friends = real magic ✨",
-"You’re my safe place 🫂",
-"Cheers to us 🍻",
-"Forever team 😎",
-"Distance can’t break this 🤍",
-"You matter more than you know 🌟",
-"Friendship goals unlocked 🔓",
-"Your vibe = peace 🕊️",
-"Thanks for all the laughs 😂",
-"Friendship > everything 🙌",
-"You’re one in a million 💎",
-"Always proud of you 👏",
-"Never change 🧡",
-"Here’s a smile just for you 😊"
-],
-lover:[
-"Every heartbeat knows your name ❤️",
-"You are my favourite thought 💭",
-"Love looks better on you 😍",
-"My world starts with you 🌍",
-"Forever feels right with you ♾️",
-"You’re my today and all tomorrows 💕",
-"I choose you, always 🌹",
-"Love found its way 💌",
-"My heart feels home 🏡",
-"You complete my silence 🤍",
-"Love is you 💞",
-"My safe forever 🫶",
-"Every moment counts ⏳",
-"Together feels perfect 💑",
-"My favourite notification 📱",
-"Your smile = my weakness 😘",
-"Still falling for you 💫",
-"Always us ❤️‍🔥",
-"My calm & chaos 🌊",
-"You are my love story 📖"
-],
-crush:[
-"I don’t know why, but you make me smile 😊",
-"Just wanted you to know 🌸",
-"Maybe someday 💫",
-"Your presence hits different 😌",
-"Low-key thinking about you 💭",
-"You’re kind of special 👀",
-"Hope this makes you smile 🙂",
-"Not saying much, but… yeah 💌",
-"You crossed my mind again 🙃",
-"Secret smiles 🤫",
-"A little courage in a message 🌷",
-"Maybe this means something 💕",
-"Your vibe is rare ✨",
-"Just felt like sending this 🌙",
-"Soft thoughts 💭",
-"One message, many feelings 💗",
-"You’re effortlessly cool 😎",
-"Silently cheering for you 👏",
-"Just being honest 🌸",
-"Take this smile 😄"
-],
-family:[
-"Family is everything 🏡",
-"Grateful for you always 🙏",
-"Love you beyond words ❤️",
-"Home is you 🤍",
-"Thank you for everything 🌼",
-"Family = strength 💪",
-"Always together 💞",
-"You mean the world 🌍",
-"So lucky to have you 🍀",
-"Forever bonded 🧬",
-"Love never ends ♾️",
-"Always my people 🫂",
-"Roots & wings 🌳",
-"Blessed 🙌",
-"Heart full 💖",
-"Family first 👨‍👩‍👧",
-"Endless support 🤝",
-"Pure love 💕",
-"Always thankful 🙏",
-"My safe forever 🏠"
-],
-ex:[
-"No hate, just peace 🕊️",
-"Hope you’re doing well 🙂",
-"Memories stay, lessons too 📘",
-"Wishing you happiness 🌱",
-"Time changes everything ⏳",
-"Grateful for the past 🙏",
-"Growth looks good 🌿",
-"No regrets, only learning 💭",
-"Letting go feels calm 🤍",
-"Good vibes only ✌️",
-"Paths change 🚶",
-"Peace over pain 🌸",
-"Respect remains 🤝",
-"Life moves on 🌊",
-"Silence is healing 🫶",
-"Wish you well 🌈",
-"Endings teach us 🧠",
-"Closure found 🔓",
-"Better days ahead ☀️",
-"Take care 🌼"
-]
+  friend:["Friendship is magic ❤️","You matter a lot 🤝","Always with you 🌈","True bond 🧩","Forever team 😎","Thanks for being you 💙","Real ones stay ✨","Safe place 🫂","Cheers 🍻","Proud of you 👏","Never change 🌟","Good vibes only 😄","Distance means nothing 🌍","You’re rare 💎","Trust forever 🤍","Laugh more 😂","Respect always 🤝","Strong bond 💪","You count 💯","Smile 😊"],
+  lover:["My heart chose you ❤️","You are my world 🌍","Forever us ♾️","Love lives here 💕","You complete me 🫶","Always you 💌","My calm 🕊️","Heartbeat knows you 💓","Endless love 🌹","You are home 🏡","Still falling 😍","Always yours 💞","Together perfect 💑","My favorite thought 💭","Safe forever 🤍","One soul 💫","All tomorrows ⏳","My smile reason 😊","Pure love ❤️‍🔥","Chosen always 🌟"],
+  crush:["Just felt like you 😊","You’re special 🌸","Soft thoughts 💭","Low-key smile 😄","Maybe someday 💫","Silent feelings 🤫","Just honesty 🌷","Your vibe ✨","A small courage 💌","Thinking of you 👀","Hope this helps 🙂","Unsaid words 💗","Little spark 🔥","Simple hello 👋","Rare energy 💎","Gentle thought 🌙","Warm smile 😊","Not random 🌼","Tiny hint 💭","Take care 🌸"],
+  family:["Family first 🏡","Grateful always 🙏","Love beyond words ❤️","Together strong 💪","My people 🤍","Forever bonded ♾️","Home vibes 🫂","Thank you 🌼","Safe forever 🏠","Roots & wings 🌳","Pure love 💕","Blessed 🙌","Heart full 💖","Always us 👨‍👩‍👧","Support system 🤝","Love remains ❤️","Family magic ✨","Peaceful heart 🕊️","Endless care 🌈","You matter 🌟"],
+  ex:["Peace only 🕊️","Wishing well 🌱","Lessons learned 📘","No hate ✌️","Respect stays 🤝","Healing done 🤍","Growth matters 🌿","Letting go ⏳","Good memories 📸","Moving forward 🚶","Calm vibes 🌸","Life flows 🌊","Closure found 🔓","Take care 🌼","Better days ☀️","Silence heals 🫶","Thankful past 🙏","Change happens 💭","All the best 🌈","Stay safe 🤍"]
 };
+
+let generatedLink="";
 
 function generate(){
   const f=from.value.trim();
   const t=to.value.trim();
   const c=cat.value;
   if(!f||!t||!c){alert("Fill all fields");return;}
+
   const m=messages[c][Math.floor(Math.random()*20)];
-  const url=location.origin+location.pathname+
+  generatedLink=
+    location.origin+location.pathname+
     `?from=${encodeURIComponent(f)}&to=${encodeURIComponent(t)}&cat=${c}&msg=${encodeURIComponent(m)}`;
-  link.innerText=url;
+
+  linkBox.innerText=generatedLink;
+  shareBox.classList.remove("hidden");
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(generatedLink);
+  alert("Link copied ✅");
+}
+
+function shareWhatsApp(){
+  window.open(`https://wa.me/?text=${encodeURIComponent(generatedLink)}`);
 }
 
 function openMsg(){
   env.classList.add("hidden");
   msgBox.classList.remove("hidden");
-  spawnHearts();
-}
-
-function spawnHearts(){
-  for(let i=0;i<20;i++){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.innerText="❤️";
-    h.style.left=Math.random()*100+"vw";
-    h.style.animationDuration=3+Math.random()*3+"s";
-    document.body.appendChild(h);
-    setTimeout(()=>h.remove(),5000);
-  }
 }
 
 function goHome(){
